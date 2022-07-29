@@ -1,4 +1,3 @@
-import pandas as pd
 from requests_html import HTMLSession
 import time
 from discord import Webhook, RequestsWebhookAdapter
@@ -15,10 +14,6 @@ webhook = Webhook.from_url(config.webhookurl, adapter=RequestsWebhookAdapter())
 
 # url to read from: this is where RSF crowd meter reads from i believe its an API endpoint
 rsf_url = 'https://safe.density.io/#/displays/dsp_956223069054042646?token=shr_o69HxjQ0BYrY2FPD9HxdirhJYcFDCeRolEd744Uj88e'
-
-# making a dataframe (why am i doing this part again)
-df = pd.DataFrame(columns={'timestamp', 'fullness'})
-df = df[['timestamp', 'fullness']]
 
 # new session for html
 session = HTMLSession()
@@ -74,21 +69,4 @@ def sendAlert(timeout=900, threshold=50):
 # probably write to postgres or smth and then have data analysis w pandas/matplotlib/smth pretty -> host analysis using some frontend stuff for a cute website
 
 
-def writeData(timeout=0):
-    while True:
-        r = session.get(rsf_url)
-        r.html.render(sleep=5)
-        info = r.html.find('div.styles_fullness__rayxl')
-        newlist = [item.text for item in info]
-        if len(newlist) == 0:
-            print('no data')
-            continue
-        result = int(newlist[0].split('%')[0])
-        now = pd.Timestamp.now()
-        now_ts = now.timestamp()
-        df.loc[len(df.index)] = [now_ts, result]
-        print(df)
-        time.sleep(timeout)
-
-
-sendAlert(threshold=0)
+sendAlert(timeout=5, threshold=0)
