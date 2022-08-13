@@ -2,7 +2,7 @@ from requests_html import HTMLSession
 import time
 from discord import Webhook, RequestsWebhookAdapter
 import config
-
+import nest_asyncio
 
 # DISCORD WEBHOOK SETUP
 
@@ -11,6 +11,8 @@ webhook = Webhook.from_url(config.webhookurl, adapter=RequestsWebhookAdapter())
 # send test message to url
 #webhook.send("Hello World")
 
+# apply nest_asynchio to this program
+nest_asynchio.apply()
 
 # url to read from: this is where RSF crowd meter reads from i believe its an API endpoint
 rsf_url = 'https://safe.density.io/#/displays/dsp_956223069054042646?token=shr_o69HxjQ0BYrY2FPD9HxdirhJYcFDCeRolEd744Uj88e'
@@ -69,4 +71,4 @@ def sendAlert(timeout=900, threshold=50):
 # probably write to postgres or smth and then have data analysis w pandas/matplotlib/smth pretty -> host analysis using some frontend stuff for a cute website
 
 
-sendAlert(timeout=5, threshold=0)
+sendAlert(30)
